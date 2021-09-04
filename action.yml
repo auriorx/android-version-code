@@ -4,7 +4,7 @@ inputs:
   app-id: 
     description: The App ID of the Android App
     required: true
-  play-store-json
+  play-store-json:
     description: JSON to authenticate with the Play Store
     required: true  
 outputs: 
