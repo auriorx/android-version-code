@@ -17,19 +17,19 @@ runs:
   steps:
     - name: Internal Track Version Codes
       run: |
-        echo "::set-output name=RESULT::$(fastlane run google_play_track_version_codes package_name:'${{env.APP_ID}}' track:'internal' json_key_data:'${{env.PLAY_STORE_JSON}}' | grep Result:)"
+        echo "::set-output name=RESULT::$(fastlane run google_play_track_version_codes package_name:'${{ inputs.app-id }}' track:'internal' json_key_data:'${{ inputs.play-store-json }}' | grep Result:)"
       id: version_code_internal
     - name: Alpha Track Version Codes
       run: |
-        echo "::set-output name=RESULT::$(fastlane run google_play_track_version_codes package_name:'${{env.APP_ID}}' track:'alpha' json_key_data:'${{env.PLAY_STORE_JSON}}' | grep Result:)"
+        echo "::set-output name=RESULT::$(fastlane run google_play_track_version_codes package_name:'${{ inputs.app-id }}' track:'alpha' json_key_data:'${{ inputs.play-store-json }}' | grep Result:)"
       id: version_code_alpha
     - name: Beta Track Version Codes
       run: |
-        echo "::set-output name=RESULT::$(fastlane run google_play_track_version_codes package_name:'${{env.APP_ID}}' track:'beta' json_key_data:'${{env.PLAY_STORE_JSON}}' | grep Result:)"
+        echo "::set-output name=RESULT::$(fastlane run google_play_track_version_codes package_name:'${{ inputs.app-id }}' track:'beta' json_key_data:'${{ inputs.play-store-json }}' | grep Result:)"
       id: version_code_beta
     - name: Production Track Version Codes
       run: |
-        echo "::set-output name=RESULT::$(fastlane run google_play_track_version_codes package_name:'${{env.APP_ID}}' track:'production' json_key_data:'${{env.PLAY_STORE_JSON}}' | grep Result:)"
+        echo "::set-output name=RESULT::$(fastlane run google_play_track_version_codes package_name:'${{ inputs.app-id }}' track:'production' json_key_data:'${{ inputs.play-store-json }}' | grep Result:)"
       id: version_code_production
     - name: Determine Version Code
       run : |
