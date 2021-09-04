@@ -1,0 +1,46 @@
+name: 'Android Version Code'
+description: Calculate the next Version Code for an Android App Build
+inputs:
+  app-id: 
+    description: The App ID of the Android App
+    required: true
+  play-store-json
+    description: JSON to authenticate with the Play Store
+    required: true  
+outputs: 
+  next-version-code:
+    description: The max version code in the play store for the app +1
+    value: ${{ steps.version_code_increment.outputs.VALUE }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Internal Track Version Codes
+      run: |
+        echo "::set-output name=RESULT::$(fastlane run google_play_track_version_codes package_name:'${{env.APP_ID}}' track:'internal' json_key_data:'${{env.PLAY_STORE_JSON}}' | grep Result:)"
+      id: version_code_internal
+    - name: Alpha Track Version Codes
+      run: |
+        echo "::set-output name=RESULT::$(fastlane run google_play_track_version_codes package_name:'${{env.APP_ID}}' track:'alpha' json_key_data:'${{env.PLAY_STORE_JSON}}' | grep Result:)"
+      id: version_code_alpha
+    - name: Beta Track Version Codes
+      run: |
+        echo "::set-output name=RESULT::$(fastlane run google_play_track_version_codes package_name:'${{env.APP_ID}}' track:'beta' json_key_data:'${{env.PLAY_STORE_JSON}}' | grep Result:)"
+      id: version_code_beta
+    - name: Production Track Version Codes
+      run: |
+        echo "::set-output name=RESULT::$(fastlane run google_play_track_version_codes package_name:'${{env.APP_ID}}' track:'production' json_key_data:'${{env.PLAY_STORE_JSON}}' | grep Result:)"
+      id: version_code_production
+    - name: Determine Version Code
+      run : |
+        A=$(echo ${{ steps.version_code_internal.outputs.RESULT }} | cut -d[ -f4 | cut -d] -f1)
+        A+=","
+        A+=$(echo ${{ steps.version_code_alpha.outputs.RESULT }} | cut -d[ -f4 | cut -d] -f1)
+        A+=","
+        A+=$(echo ${{ steps.version_code_beta.outputs.RESULT }} | cut -d[ -f4 | cut -d] -f1)
+        A+=","
+        A+=$(echo ${{ steps.version_code_production.outputs.RESULT }} | cut -d[ -f4 | cut -d] -f1)          
+        A=$(echo $A | sed 's/ //g' | tr "," "\n" | sort -n | tail -1)
+        A=$(($A + 1))
+        echo "::set-output name=VALUE::$(echo $A)"
+      id: version_code_increment
