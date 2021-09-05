@@ -19,18 +19,22 @@ runs:
       run: |
         echo "::set-output name=RESULT::$(fastlane run google_play_track_version_codes package_name:'${{ inputs.app-id }}' track:'internal' json_key_data:'${{ inputs.play-store-json }}' | grep Result:)"
       id: version_code_internal
+      shell: bash
     - name: Alpha Track Version Codes
       run: |
         echo "::set-output name=RESULT::$(fastlane run google_play_track_version_codes package_name:'${{ inputs.app-id }}' track:'alpha' json_key_data:'${{ inputs.play-store-json }}' | grep Result:)"
       id: version_code_alpha
+      shell: bash
     - name: Beta Track Version Codes
       run: |
         echo "::set-output name=RESULT::$(fastlane run google_play_track_version_codes package_name:'${{ inputs.app-id }}' track:'beta' json_key_data:'${{ inputs.play-store-json }}' | grep Result:)"
       id: version_code_beta
+      shell: bash
     - name: Production Track Version Codes
       run: |
         echo "::set-output name=RESULT::$(fastlane run google_play_track_version_codes package_name:'${{ inputs.app-id }}' track:'production' json_key_data:'${{ inputs.play-store-json }}' | grep Result:)"
       id: version_code_production
+      shell: bash
     - name: Determine Version Code
       run : |
         A=$(echo ${{ steps.version_code_internal.outputs.RESULT }} | cut -d[ -f4 | cut -d] -f1)
@@ -44,3 +48,4 @@ runs:
         A=$(($A + 1))
         echo "::set-output name=VALUE::$(echo $A)"
       id: version_code_increment
+      shell: bash
