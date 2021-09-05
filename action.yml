@@ -46,6 +46,7 @@ runs:
         A+=$(echo ${{ steps.version_code_production.outputs.RESULT }} | cut -d[ -f4 | cut -d] -f1)          
         A=$(echo $A | sed 's/ //g' | tr "," "\n" | sort -n | tail -1)
         A=$(($A + 1))
+        echo "Next version code: $A"
         echo "::set-output name=VALUE::$(echo $A)"
       id: version_code_increment
       shell: bash
